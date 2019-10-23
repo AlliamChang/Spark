@@ -40,6 +40,7 @@ public class MongoDBJDBC{
             MongoCollection<Document> collection = mongoDatabase.getCollection("test");
             collection.drop();
             List<Document> documents = new ArrayList<Document>();
+            bufferedReader.readLine();  // 去首行
             while(null != (strLine = bufferedReader.readLine())){
                 String[] each = strLine.split("\t");
                 Document document = new Document("tconst", each[0]).
@@ -47,13 +48,13 @@ public class MongoDBJDBC{
                         append("year", each[5]).
                         append("genre", each[8]);
                 documents.add(document);
-                System.out.println("第[" + lineCount + "]行数据:[" + strLine + "]");
+//                System.out.println("第[" + lineCount + "]行数据:[" + strLine + "]");
                 lineCount++;
-                if (lineCount > 50000){
-                    break;
+                if (lineCount%10000 == 0){
+                    System.out.println(lineCount);
                 }
+                break;
             }
-            System.out.println(documents.size());
             collection.insertMany(documents);
         }catch(Exception e){
             e.printStackTrace();
